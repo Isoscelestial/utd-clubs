@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { type FC } from 'react';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { api } from '@src/trpc/server';
@@ -67,6 +68,20 @@ const ClubInfoSegment: FC<{
             </>
           </div>
         )}
+      </div>
+      <div className="mt-5 flex flex-row">
+        {club.tags.map((tag) => (
+          <Link
+            href={{
+              pathname: '/',
+              query: { tag: tag },
+            }}
+            key={tag}
+            className="m-2 h-min rounded-full bg-black bg-opacity-50 px-4 py-2 align-middle font-semibold text-slate-100"
+          >
+            {tag}
+          </Link>
+        ))}
       </div>
     </div>
   );
