@@ -19,7 +19,7 @@ type x = {
 const modifiedFields = (
   dirtyFields: x,
   data: z.infer<typeof editOfficerSchema>,
-  officers: {
+  collaborators: {
     userId: string;
     name: string;
     locked: boolean;
@@ -28,7 +28,7 @@ const modifiedFields = (
 ) => {
   const modded = data.officers.filter(
     (value, index) =>
-      !!officers.find((off) => off.userId === value.userId) &&
+      !!collaborators.find((off) => off.userId === value.userId) &&
       dirtyFields[index]?.title,
   );
   const created = data.officers.filter(
@@ -58,16 +58,16 @@ const deletedReducer = (
   }
 };
 
-type EditOfficerFormProps = {
+type EditCollaboratorFormProps = {
   clubId: string;
-  officers: {
+  collaborators: {
     userId: string;
     name: string;
     locked: boolean;
     position: 'President' | 'Officer';
   }[];
 };
-const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
+const EditCollaboratorForm = ({ clubId, collaborators }: EditCollaboratorFormProps) => {
   const {
     control,
     handleSubmit,
@@ -75,7 +75,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
     formState: { errors, dirtyFields, isDirty },
   } = useForm<z.infer<typeof editOfficerSchema>>({
     resolver: zodResolver(editOfficerSchema),
-    defaultValues: { officers: officers },
+    defaultValues: { officers: collaborators },
   });
   const { fields, append, remove } = useFieldArray({
     control,
@@ -83,12 +83,12 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
   });
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
   const removeItem = (index: number, userId: string) => {
-    if (officers.find((officer) => officer.userId == userId))
+    if (collaborators.find((collaborator) => collaborator.userId == userId))
       modifyDeleted({ type: 'add', target: userId });
     remove(index);
   };
   const router = useRouter();
-  const editOfficers = api.club.edit.officers.useMutation({
+  const editCollaborators = api.club.edit.officers.useMutation({
     onSuccess: () => {
       router.refresh();
     },
@@ -98,10 +98,10 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
       const { modified, created } = modifiedFields(
         dirtyFields.officers,
         data,
-        officers,
+        collaborators,
       );
-      if (!editOfficers.isPending) {
-        editOfficers.mutate({
+      if (!editCollaborators.isPending) {
+        editCollaborators.mutate({
           clubId: clubId,
           deleted: deleted,
           modified: modified,
@@ -134,7 +134,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
           </div>
           <div className="space-y-2">
             {fields.map((field, index) => (
-              <OfficerItem
+              <CollaboratorItem
                 key={field.id}
                 index={index}
                 id={field.userId}
@@ -156,7 +156,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
             type="button"
             onClick={() => {
               reset({
-                officers: officers,
+                officers: collaborators,
               });
             }}
             disabled={!isDirty}
@@ -170,15 +170,15 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
     </div>
   );
 };
-export default EditOfficerForm;
-type OfficerItemProps = {
+export default EditCollaboratorForm;
+type CollaboratorItemProps = {
   remove: (index: number, userId: string) => void;
   id: string;
   index: number;
   name: string;
   locked: boolean;
 };
-const OfficerItem = ({ index, id, name, remove, locked }: OfficerItemProps) => {
+const CollaboratorItem = ({ index, id, name, remove, locked }: CollaboratorItemProps) => {
   return (
     <div className="flex flex-row items-center rounded-md bg-slate-300 p-2">
       <div className="flex flex-col">

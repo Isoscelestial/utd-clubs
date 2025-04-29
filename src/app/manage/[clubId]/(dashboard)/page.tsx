@@ -14,7 +14,7 @@ const Page = ({ params }: { params: { clubId: string } }) => {
           href={`/manage/${params.clubId}/edit/officers`}
           className="rounded-md bg-blue-primary p-1 font-semibold text-white"
         >
-          Manage Officers
+          Manage Collaborators/Officers
         </Link>
         <button className="rounded-md bg-blue-primary p-1 font-semibold text-white">
           View members

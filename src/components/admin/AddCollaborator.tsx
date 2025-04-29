@@ -5,13 +5,13 @@ import { UserSearchBar } from '../searchBar/UserSearchBar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-type OfficerState = {
+type CollaboratorState = {
   id: string;
   name: string;
   role: 'President' | 'Officer' | 'Member';
 };
 
-export default function AddOfficer({ clubId }: { clubId: string }) {
+export default function AddCollaborator({ clubId }: { clubId: string }) {
   const { mutate } = api.admin.addOfficer.useMutation({
     onSuccess: () => {
       router.refresh();
@@ -19,7 +19,7 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
     },
   });
   const router = useRouter();
-  const [toAdd, setToAdd] = useState<OfficerState | null>(null);
+  const [toAdd, setToAdd] = useState<CollaboratorState | null>(null);
 
   return (
     <div className="container">
@@ -39,7 +39,7 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
           onChange={(e) =>
             setToAdd((prev) => ({
               id: prev?.id ?? '',
-              role: e.target.value as OfficerState['role'],
+              role: e.target.value as CollaboratorState['role'],
               name: prev?.name ?? '',
             }))
           }

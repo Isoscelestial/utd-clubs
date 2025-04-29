@@ -4,12 +4,12 @@ import { type Row, type RowData, type Table } from '@tanstack/react-table';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Officers = Awaited<ReturnType<typeof API.club.getOfficers>>;
+type Collaborators = Awaited<ReturnType<typeof API.club.getOfficers>>;
 
 type Props = {
-  row: Row<Officers[number]>;
+  row: Row<Collaborators[number]>;
   column: { id: string };
-  table: Table<Officers[number]>;
+  table: Table<Collaborators[number]>;
 };
 
 declare module '@tanstack/react-table' {

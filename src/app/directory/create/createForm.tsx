@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
 import ContactSelector from '@src/app/directory/create/CreateContactSelector';
-import OfficerSelector from '@src/app/directory/create/OfficerSelector';
+import CollaboratorSelector from '@src/app/directory/create/CollaboratorSelector';
 import { api } from '@src/trpc/react';
 import { createClubSchema } from '@src/utils/formSchemas';
 import { useRouter } from 'next/navigation';
@@ -68,7 +68,7 @@ const CreateClubForm = ({ user }: { user: { id: string; name: string } }) => {
           )}
         </div>
         <div className="w-full rounded-md bg-slate-100 p-5 shadow-sm">
-          <OfficerSelector
+          <CollaboratorSelector
             control={control}
             register={register}
             errors={errors}

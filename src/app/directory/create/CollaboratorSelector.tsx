@@ -9,16 +9,16 @@ import {
 import { type z } from 'zod';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 
-type OfficerSelectorProps = {
+type CollaboratorSelectorProps = {
   control: Control<z.infer<typeof createClubSchema>>;
   register: UseFormRegister<z.infer<typeof createClubSchema>>;
   errors: FieldErrors<z.infer<typeof createClubSchema>>;
 };
-const OfficerSelector = ({
+const CollaboratorSelector = ({
   control,
   register,
   errors,
-}: OfficerSelectorProps) => {
+}: CollaboratorSelectorProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'officers',
@@ -26,7 +26,7 @@ const OfficerSelector = ({
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex flex-row py-1">
-        <h2>Officers</h2>
+        <h2>Collaborators</h2>
       </div>
       <div>
         <UserSearchBar
@@ -48,7 +48,7 @@ const OfficerSelector = ({
       </div>
       <div className="space-y-2">
         {fields.map((field, index) => (
-          <OfficerItem
+          <CollaboratorItem
             key={field.id}
             register={register}
             index={index}
@@ -62,9 +62,9 @@ const OfficerSelector = ({
     </div>
   );
 };
-export default OfficerSelector;
+export default CollaboratorSelector;
 
-type OfficerItemProps = {
+type CollaboratorItemProps = {
   register: UseFormRegister<z.infer<typeof createClubSchema>>;
   remove: UseFieldArrayRemove;
   index: number;
@@ -72,14 +72,14 @@ type OfficerItemProps = {
   locked: boolean;
   errors: FieldErrors<z.infer<typeof createClubSchema>>;
 };
-const OfficerItem = ({
+const CollaboratorItem = ({
   register,
   index,
   name,
   remove,
   errors,
   locked,
-}: OfficerItemProps) => {
+}: CollaboratorItemProps) => {
   return (
     <div className="flex flex-row items-center rounded-md bg-slate-300 p-2">
       <div className="flex flex-col">

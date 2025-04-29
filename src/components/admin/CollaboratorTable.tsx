@@ -7,9 +7,9 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import RoleDropDown from './RoleDropDown';
-type Officers = Awaited<ReturnType<typeof api.club.getOfficers>>;
+type Collaborators = Awaited<ReturnType<typeof api.club.getOfficers>>;
 
-const columns: ColumnDef<Officers[number]>[] = [
+const columns: ColumnDef<Collaborators[number]>[] = [
   {
     id: 'name',
     header: 'Full Name',
@@ -24,9 +24,9 @@ const columns: ColumnDef<Officers[number]>[] = [
   },
 ];
 
-export default function OfficerTable({ officers }: { officers: Officers }) {
+export default function CollaboratorTable({ collaborators }: { collaborators: Collaborators }) {
   const table = useReactTable({
-    data: officers,
+    data: collaborators,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

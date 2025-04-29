@@ -44,8 +44,8 @@ const ClubInfoSegment: FC<{
             <>
               <h1 className="text-center text-2xl font-medium">Leadership</h1>
               <div className="flex flex-col justify-center align-middle">
-                {club.officers.map((officer) => (
-                  <div className="mt-5 flex flex-row" key={officer.id}>
+                {club.officers.map((collaborator) => (
+                  <div className="mt-5 flex flex-row" key={collaborator.id}>
                     <Image
                       src={club.image}
                       alt="Picture of the author"
@@ -55,10 +55,10 @@ const ClubInfoSegment: FC<{
                     />
                     <div className="mx-5 flex flex-col justify-center align-middle">
                       <p className="text-left text-sm text-slate-600">
-                        {officer.name}
+                        {collaborator.name}
                       </p>
                       <p className="mt-2 text-sm text-slate-400">
-                        {officer.position}
+                        {collaborator.position}
                       </p>
                     </div>
                   </div>
