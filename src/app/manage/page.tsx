@@ -11,7 +11,7 @@ export default async function Page() {
   if (!session) {
     redirect(signInRoute('manage'));
   }
-  const clubs = await api.club.getOfficerClubs();
+  const clubs = await api.club.getCollaboratorClubs();
   return (
     <main className="">
       <Header />

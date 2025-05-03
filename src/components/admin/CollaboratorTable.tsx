@@ -7,7 +7,7 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import RoleDropDown from './RoleDropDown';
-type Collaborators = Awaited<ReturnType<typeof api.club.getOfficers>>;
+type Collaborators = Awaited<ReturnType<typeof api.club.getCollaborators>>;
 
 const columns: ColumnDef<Collaborators[number]>[] = [
   {

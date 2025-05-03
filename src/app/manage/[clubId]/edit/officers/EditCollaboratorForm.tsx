@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import { api } from '@src/trpc/react';
-import { editOfficerSchema } from '@src/utils/formSchemas';
+import { editCollaboratorSchema } from '@src/utils/formSchemas';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -18,7 +18,7 @@ type x = {
 }[];
 const modifiedFields = (
   dirtyFields: x,
-  data: z.infer<typeof editOfficerSchema>,
+  data: z.infer<typeof editCollaboratorSchema>,
   collaborators: {
     userId: string;
     name: string;
@@ -26,12 +26,12 @@ const modifiedFields = (
     position: string;
   }[],
 ) => {
-  const modded = data.officers.filter(
+  const modded = data.collaborators.filter(
     (value, index) =>
       !!collaborators.find((off) => off.userId === value.userId) &&
       dirtyFields[index]?.title,
   );
-  const created = data.officers.filter(
+  const created = data.collaborators.filter(
     (value, index) => dirtyFields[index]?.userId,
   );
   return {
@@ -43,11 +43,11 @@ const modifiedFields = (
 type modifyDeletedAction =
   | {
       type: 'add';
-      target: z.infer<typeof editOfficerSchema>['officers'][number]['userId'];
+      target: z.infer<typeof editCollaboratorSchema>['collaborators'][number]['userId'];
     }
   | { type: 'reset' };
 const deletedReducer = (
-  state: Array<z.infer<typeof editOfficerSchema>['officers'][number]['userId']>,
+  state: Array<z.infer<typeof editCollaboratorSchema>['collaborators'][number]['userId']>,
   action: modifyDeletedAction,
 ) => {
   switch (action.type) {
@@ -73,13 +73,13 @@ const EditCollaboratorForm = ({ clubId, collaborators }: EditCollaboratorFormPro
     handleSubmit,
     reset,
     formState: { errors, dirtyFields, isDirty },
-  } = useForm<z.infer<typeof editOfficerSchema>>({
-    resolver: zodResolver(editOfficerSchema),
-    defaultValues: { officers: collaborators },
+  } = useForm<z.infer<typeof editCollaboratorSchema>>({
+    resolver: zodResolver(editCollaboratorSchema),
+    defaultValues: { collaborators: collaborators },
   });
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'officers',
+    name: 'collaborators',
   });
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
   const removeItem = (index: number, userId: string) => {
@@ -88,15 +88,15 @@ const EditCollaboratorForm = ({ clubId, collaborators }: EditCollaboratorFormPro
     remove(index);
   };
   const router = useRouter();
-  const editCollaborators = api.club.edit.officers.useMutation({
+  const editCollaborators = api.club.edit.collaborators.useMutation({
     onSuccess: () => {
       router.refresh();
     },
   });
   const submitForm = handleSubmit((data) => {
-    if (dirtyFields.officers !== undefined) {
+    if (dirtyFields.collaborators !== undefined) {
       const { modified, created } = modifiedFields(
-        dirtyFields.officers,
+        dirtyFields.collaborators,
         data,
         collaborators,
       );
@@ -128,8 +128,8 @@ const EditCollaboratorForm = ({ clubId, collaborators }: EditCollaboratorFormPro
             />
           </div>
           <div>
-            {errors.officers && (
-              <p className="text-red-500">{errors.officers.message}</p>
+            {errors.collaborators && (
+              <p className="text-red-500">{errors.collaborators.message}</p>
             )}
           </div>
           <div className="space-y-2">
@@ -156,7 +156,7 @@ const EditCollaboratorForm = ({ clubId, collaborators }: EditCollaboratorFormPro
             type="button"
             onClick={() => {
               reset({
-                officers: collaborators,
+                collaborators: collaborators,
               });
             }}
             disabled={!isDirty}

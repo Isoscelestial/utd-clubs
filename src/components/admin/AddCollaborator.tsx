@@ -12,7 +12,7 @@ type CollaboratorState = {
 };
 
 export default function AddCollaborator({ clubId }: { clubId: string }) {
-  const { mutate } = api.admin.addOfficer.useMutation({
+  const { mutate } = api.admin.addCollaborator.useMutation({
     onSuccess: () => {
       router.refresh();
       setToAdd(null);
@@ -55,7 +55,7 @@ export default function AddCollaborator({ clubId }: { clubId: string }) {
           className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => {
             if (!toAdd) return;
-            mutate({ clubId, officerId: toAdd.id, role: toAdd.role });
+            mutate({ clubId, collaboratorId: toAdd.id, role: toAdd.role });
           }}
           disabled={!toAdd || !toAdd.id || !toAdd.role}
         >

@@ -4,7 +4,7 @@ import { type Row, type RowData, type Table } from '@tanstack/react-table';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Collaborators = Awaited<ReturnType<typeof API.club.getOfficers>>;
+type Collaborators = Awaited<ReturnType<typeof API.club.getCollaborators>>;
 
 type Props = {
   row: Row<Collaborators[number]>;
@@ -21,7 +21,7 @@ declare module '@tanstack/react-table' {
 
 export default function RoleDropDown({ row, column: { id }, table }: Props) {
   const router = useRouter();
-  const { mutate } = api.admin.updateOfficer.useMutation({
+  const { mutate } = api.admin.updateCollaborator.useMutation({
     onSuccess: () => router.refresh(),
   });
   const originalVal = row.original.memberType;
@@ -33,7 +33,7 @@ export default function RoleDropDown({ row, column: { id }, table }: Props) {
     mutate({
       clubId: row.original.clubId,
       role: value,
-      officerId: row.original.userId,
+      collaboratorId: row.original.userId,
     });
   }
 

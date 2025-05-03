@@ -11,8 +11,8 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
     redirect(signInRoute(`manage/${params.clubId}/create`));
   }
 
-  const officerClubs = await api.club.getOfficerClubs();
-  const currentClub = officerClubs.filter((val) => {
+  const collaboratorClubs = await api.club.getCollaboratorClubs();
+  const currentClub = collaboratorClubs.filter((val) => {
     return val.id == params.clubId;
   })[0];
   if (!currentClub) {
@@ -23,7 +23,7 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
     <main className="h-screen ">
       <Header />
       <div className="flex flex-row justify-between gap-20 px-5">
-        <CreateEventForm clubId={currentClub.id} officerClubs={officerClubs} />
+        <CreateEventForm clubId={currentClub.id} collaboratorClubs={collaboratorClubs} />
       </div>
     </main>
   );

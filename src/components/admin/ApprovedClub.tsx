@@ -7,7 +7,7 @@ import ChangeClubStatus from './ChangeClubStatus';
 
 type Props = { club: SelectClub };
 export default async function AcceptedClub({ club: club }: Props) {
-  const collaborators = await api.club.getOfficers({ id: club.id });
+  const collaborators = await api.club.getCollaborators({ id: club.id });
 
   return (
     <>

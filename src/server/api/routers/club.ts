@@ -37,9 +37,9 @@ const allSchema = z.object({
   initialCursor: z.number().min(0).default(0),
 });
 const createClubSchema = baseClubSchema
-  .omit({ clubId: true, officers: true })
+  .omit({ clubId: true, collaborators: true })
   .extend({
-    officers: z
+    collaborators: z
       .object({
         id: z.string().min(1),
         position: z.string(),
@@ -131,7 +131,7 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
-  getOfficerClubs: protectedProcedure.query(async ({ ctx }) => {
+  getCollaboratorClubs: protectedProcedure.query(async ({ ctx }) => {
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
         eq(userMetadataToClubs.userId, ctx.session.user.id),
@@ -142,7 +142,7 @@ export const clubRouter = createTRPCRouter({
     // type wah = NonNullable<(typeof results)[number]['club']>;
     return results.map((ele) => ele.club);
   }),
-  isOfficer: protectedProcedure
+  isCollaborator: protectedProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
       const found = await ctx.db.query.userMetadataToClubs.findFirst({
@@ -222,30 +222,30 @@ export const clubRouter = createTRPCRouter({
       }
 
       await ctx.db.insert(userMetadataToClubs).values(
-        input.officers.map((officer) => {
+        input.collaborators.map((collaborator) => {
           return {
-            userId: officer.id,
+            userId: collaborator.id,
             clubId: clubId,
-            memberType: officer.president
+            memberType: collaborator.president
               ? ('President' as const)
               : ('Officer' as const),
-            title: officer.position,
+            title: collaborator.position,
           };
         }),
       );
       return clubId;
     }),
-  getOfficers: protectedProcedure
+  getCollaborators: protectedProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
-      const officers = await ctx.db.query.userMetadataToClubs.findMany({
+      const collaborators = await ctx.db.query.userMetadataToClubs.findMany({
         where: and(
           eq(userMetadataToClubs.clubId, input.id),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
         with: { userMetadata: true },
       });
-      return officers;
+      return collaborators;
     }),
   getListedOfficers: publicProcedure
     .input(byIdSchema)

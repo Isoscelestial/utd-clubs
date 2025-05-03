@@ -10,26 +10,26 @@ import { contacts } from '@src/server/db/schema/contacts';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { officers } from '@src/server/db/schema/officers';
 
-async function isUserOfficer(userId: string, clubId: string) {
-  const officer = await db.query.userMetadataToClubs.findFirst({
+async function isUserCollaborator(userId: string, clubId: string) {
+  const collaborator = await db.query.userMetadataToClubs.findFirst({
     where: (userMetadataToClubs) =>
       and(
         eq(userMetadataToClubs.userId, userId),
         eq(userMetadataToClubs.clubId, clubId),
       ),
   });
-  if (!officer || !officer.memberType) return false;
-  return officer.memberType !== 'Member';
+  if (!collaborator || !collaborator.memberType) return false;
+  return collaborator.memberType !== 'Member';
 }
 async function isUserPresident(userId: string, clubId: string) {
-  const officer = await db.query.userMetadataToClubs.findFirst({
+  const collaborator = await db.query.userMetadataToClubs.findFirst({
     where: (userMetadataToClubs) =>
       and(
         eq(userMetadataToClubs.userId, userId),
         eq(userMetadataToClubs.clubId, clubId),
       ),
   });
-  return officer?.memberType == 'President';
+  return collaborator?.memberType == 'President';
 }
 const editContactSchema = z.object({
   clubId: z.string(),
@@ -80,8 +80,8 @@ export const clubEditRouter = createTRPCRouter({
   data: protectedProcedure
     .input(editClubSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.id);
-      if (!isOfficer) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      const isCollaborator = await isUserCollaborator(ctx.session.user.id, input.id);
+      if (!isCollaborator) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
       const updatedClub = await ctx.db
         .update(club)
@@ -93,10 +93,10 @@ export const clubEditRouter = createTRPCRouter({
   contacts: protectedProcedure
     .input(editContactSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
-      if (!isOfficer)
+      const isCollaborator = await isUserCollaborator(ctx.session.user.id, input.clubId);
+      if (!isCollaborator)
         throw new TRPCError({
-          message: 'must be an officer to modify this club',
+          message: 'must be a collaborator to modify this club',
           code: 'UNAUTHORIZED',
         });
 
@@ -137,13 +137,13 @@ export const clubEditRouter = createTRPCRouter({
         )
         .onConflictDoNothing();
     }),
-  officers: protectedProcedure
+  collaborators: protectedProcedure
     .input(editCollaboratorSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
-      if (!isOfficer) {
+      const isCollaborator = await isUserCollaborator(ctx.session.user.id, input.clubId);
+      if (!isCollaborator) {
         throw new TRPCError({
-          message: 'must be an officer to modify this club',
+          message: 'must be a collaborator to modify this club',
           code: 'UNAUTHORIZED',
         });
       }
@@ -177,11 +177,11 @@ export const clubEditRouter = createTRPCRouter({
       await ctx.db
         .insert(userMetadataToClubs)
         .values(
-          input.created.map((officer) => ({
-            userId: officer.userId,
+          input.created.map((collaborator) => ({
+            userId: collaborator.userId,
             clubId: input.clubId,
             officerType: 'Officer' as const,
-            title: officer.title,
+            title: collaborator.title,
           })),
         )
         .onConflictDoUpdate({
@@ -193,10 +193,10 @@ export const clubEditRouter = createTRPCRouter({
   listedOfficers: protectedProcedure
     .input(editOfficerSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
-      if (!isOfficer) {
+      const isCollaborator = await isUserCollaborator(ctx.session.user.id, input.clubId);
+      if (!isCollaborator) {
         throw new TRPCError({
-          message: 'must be an officer to modify this club',
+          message: 'must be a collaborator to modify this club',
           code: 'UNAUTHORIZED',
         });
       }

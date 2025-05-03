@@ -15,7 +15,7 @@ export default async function Page({
   const session = await getServerAuthSession();
   if (!session) redirect(signInRoute(`manage/${clubId}/edit/officers`));
   const role = await api.club.memberType({ id: clubId });
-  const collaborators = await api.club.getOfficers({ id: clubId });
+  const collaborators = await api.club.getCollaborators({ id: clubId });
   const listedOfficers = await api.club.getListedOfficers({ id: clubId });
 
   const mapped = collaborators.map((collaborator) => ({

@@ -17,7 +17,7 @@ const Layout = async ({
 }) => {
   const session = await getServerAuthSession();
   if (!session) redirect(signInRoute(`manage/${params.clubId}`));
-  const canAccess = await api.club.isOfficer({ id: params.clubId });
+  const canAccess = await api.club.isCollaborator({ id: params.clubId });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;
   }

@@ -21,7 +21,7 @@ const CollaboratorSelector = ({
 }: CollaboratorSelectorProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'officers',
+    name: 'collaborators',
   });
   return (
     <div className="flex flex-col gap-y-2">
@@ -42,8 +42,8 @@ const CollaboratorSelector = ({
         />
       </div>
       <div>
-        {errors.officers && (
-          <p className="text-red-500">{errors.officers.message}</p>
+        {errors.collaborators && (
+          <p className="text-red-500">{errors.collaborators.message}</p>
         )}
       </div>
       <div className="space-y-2">
@@ -93,13 +93,13 @@ const CollaboratorItem = ({
             type="text"
             placeholder="Position"
             className="bg-slate-300 font-semibold text-black"
-            {...register(`officers.${index}.position` as const)}
-            aria-invalid={errors.officers && !!errors.officers[index]?.position}
+            {...register(`collaborators.${index}.position` as const)}
+            aria-invalid={errors.collaborators && !!errors.collaborators[index]?.position}
             disabled={locked}
           />
-          {errors.officers && errors.officers[index]?.position && (
+          {errors.collaborators && errors.collaborators[index]?.position && (
             <p className="text-red-500">
-              {errors.officers[index]?.position?.message}
+              {errors.collaborators[index]?.position?.message}
             </p>
           )}
         </div>

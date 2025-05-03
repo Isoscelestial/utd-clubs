@@ -18,7 +18,7 @@ const CreateClubForm = ({ user }: { user: { id: string; name: string } }) => {
   } = useForm<z.infer<typeof createClubSchema>>({
     resolver: zodResolver(createClubSchema),
     defaultValues: {
-      officers: [
+      collaborators: [
         {
           id: user.id,
           name: user.name,

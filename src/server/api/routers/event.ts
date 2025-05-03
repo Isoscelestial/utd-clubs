@@ -251,14 +251,14 @@ export const eventRouter = createTRPCRouter({
       const { clubId } = input;
       const userId = ctx.session.user.id;
 
-      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
+      const isCollaborator = await ctx.db.query.userMetadataToClubs.findFirst({
         where: and(
           eq(userMetadataToClubs.userId, userId),
           eq(userMetadataToClubs.clubId, clubId),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
       });
-      if (!isOfficer) {
+      if (!isCollaborator) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 

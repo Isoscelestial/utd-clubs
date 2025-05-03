@@ -15,10 +15,10 @@ import { type RouterOutputs } from '@src/trpc/shared';
 
 const CreateEventForm = ({
   clubId,
-  officerClubs,
+  collaboratorClubs,
 }: {
   clubId: string;
-  officerClubs: SelectClub[];
+  collaboratorClubs: SelectClub[];
 }) => {
   const { register, handleSubmit, watch, setValue, getValues, control } =
     useForm<z.infer<typeof createEventSchema>>({
@@ -45,12 +45,12 @@ const CreateEventForm = ({
     id: '',
     startTime: new Date(Date.now()),
     endTime: new Date(Date.now()),
-    club: officerClubs.filter((v) => v.id == clubId)[0]!,
+    club: collaboratorClubs.filter((v) => v.id == clubId)[0]!,
   });
   useEffect(() => {
     const subscription = watch((data, info) => {
       const { name, clubId, description, location, startTime, endTime } = data;
-      const club = officerClubs.find((val) => val.id == data.clubId);
+      const club = collaboratorClubs.find((val) => val.id == data.clubId);
       if (club) {
         setEventPreview({
           name: name || '',
@@ -77,7 +77,7 @@ const CreateEventForm = ({
       }
     });
     return () => subscription.unsubscribe();
-  }, [router, watch, officerClubs]);
+  }, [router, watch, collaboratorClubs]);
 
   const createMutation = api.event.create.useMutation({
     onSuccess: (data) => {
@@ -113,7 +113,7 @@ const CreateEventForm = ({
               className="w-full overflow-hidden text-ellipsis whitespace-nowrap bg-inherit text-[#3361FF] outline-none"
               defaultValue={clubId}
             >
-              {officerClubs.map((club) => {
+              {collaboratorClubs.map((club) => {
                 return (
                   <option key={club.id} value={club.id}>
                     {club.name}

@@ -14,8 +14,8 @@ const deleteSchema = z.object({
   id: z.string(),
 });
 
-const updateOfficer = z.object({
-  officerId: z.string(),
+const updateCollaboratorSchema = z.object({
+  collaboratorId: z.string(),
   clubId: z.string(),
   role: z.enum(['President', 'Officer', 'Member']),
 });
@@ -49,8 +49,8 @@ export const adminRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.delete(club).where(eq(club.id, input.id));
     }),
-  updateOfficer: adminProcedure
-    .input(updateOfficer)
+  updateCollaborator: adminProcedure
+    .input(updateCollaboratorSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(userMetadataToClubs)
@@ -58,19 +58,19 @@ export const adminRouter = createTRPCRouter({
         .where(
           and(
             eq(userMetadataToClubs.clubId, input.clubId),
-            eq(userMetadataToClubs.userId, input.officerId),
+            eq(userMetadataToClubs.userId, input.collaboratorId),
           ),
         );
     }),
-  addOfficer: adminProcedure
-    .input(updateOfficer)
+  addCollaborator: adminProcedure
+    .input(updateCollaboratorSchema)
     .mutation(async ({ ctx, input }) => {
-      // Make sure the user is not already an officer
+      // Make sure the user is not already a collaborator
       const exists = await ctx.db.query.userMetadataToClubs.findFirst({
         where: (userMetadataToClubs) =>
           and(
             eq(userMetadataToClubs.clubId, input.clubId),
-            eq(userMetadataToClubs.userId, input.officerId),
+            eq(userMetadataToClubs.userId, input.collaboratorId),
           ),
       });
 
@@ -81,14 +81,14 @@ export const adminRouter = createTRPCRouter({
           .where(
             and(
               eq(userMetadataToClubs.clubId, input.clubId),
-              eq(userMetadataToClubs.userId, input.officerId),
+              eq(userMetadataToClubs.userId, input.collaboratorId),
             ),
           );
         return;
       }
       await ctx.db.insert(userMetadataToClubs).values({
         clubId: input.clubId,
-        userId: input.officerId,
+        userId: input.collaboratorId,
         memberType: input.role,
       });
     }),

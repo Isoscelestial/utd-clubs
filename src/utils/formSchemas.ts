@@ -4,7 +4,7 @@ import { contactSchema } from './contact';
 export const createClubSchema = z.object({
   name: z.string().min(3, 'Club name must be at least 3 characters long'),
   description: z.string().min(1, 'Description is required'),
-  officers: z
+  collaborators: z
     .object({
       id: z.string().min(1),
       name: z.string(),
@@ -25,8 +25,8 @@ export const editClubSchema = z.object({
   name: z.string().min(3),
   description: z.string().min(1),
 });
-export const editOfficerSchema = z.object({
-  officers: z
+export const editCollaboratorSchema = z.object({
+  collaborators: z
     .object({
       userId: z.string(),
       name: z.string(),
